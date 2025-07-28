@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Find out what kind of chaotic genius you are with this fun personality quiz!">
+  <title>Sister's Birthday Quiz</title>
+  <style>
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      transition: all 0.5s ease-in-out;
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .content-wrapper {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    .screen {
+      width: 100%;
+      transition: all 0.5s ease;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Header Controls */
+    .header-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    /* Music Toggle Button */
+    .music-toggle-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .music-toggle-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    .music-toggle-button:active {
+      transform: translateY(0);
+    }
+
+    .music-toggle-button.playing {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .music-toggle-button.playing:hover {
+      background: linear-gradient(135deg, #ffa502 0%, #ff6b6b 100%);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      line-height: 1.3;
+      margin-top: 30px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      margin-top: 30px;
+    }
+
+    .question-text {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 25px 0;
+      color: #2c3e50;
+      line-height: 1.4;
+    }
+
+    .intro-text {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    .result-description {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .sister-response {
+      font-style: italic;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: #666;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Buttons */
+    button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #3498db;
+      color: white;
+      transition: all 0.3s ease;
+      margin: 10px 5px;
+      min-width: 200px;
+      box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+    }
+
+    button:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .start-button {
+      background-color: #e74c3c;
+      box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+    }
+
+    .start-button:hover {
+      background-color: #c0392b;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .restart-button {
+      background-color: #27ae60;
+      box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+    }
+
+    .restart-button:hover {
+      background-color: #229954;
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+    }
+
+    /* Progress Bar */
+    #progress-bar {
+      height: 12px;
+      background-color: #ecf0f1;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+
+    .question-counter {
+      font-size: 1rem;
+      color: #7f8c8d;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    /* Answer Options */
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .answer-options button {
+      text-align: center;
+      padding: 18px 20px;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content-wrapper {
+        padding: 20px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        margin-top: 50px;
+      }
+      
+      .question-text {
+        font-size: 1.2rem;
+      }
+      
+      .answer-options button {
+        padding: 15px;
+        font-size: 1rem;
+        min-height: 55px;
+      }
+      
+      button {
+        min-width: 160px;
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+      
+      .header-controls {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+      }
+      
+      .music-toggle-button {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        min-width: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .content-wrapper {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-top: 50px;
+      }
+      
+      .question-text {
+        font-size: 1.1rem;
+      }
+      
+      .answer-options button {
+        font-size: 0.95rem;
+        padding: 12px 15px;
+      }
+      
+      button {
+        min-width: 140px;
+        padding: 10px 15px;
+        font-size: 0.95rem;
+      }
+      
+      .header-controls {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+      }
+      
+      .music-toggle-button {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+        min-width: 90px;
+      }
+    }
+
+    /* Chaos Levels */
+    .chaos-1 {
+      background-color: #ffffff;
+      color: #2c3e50;
+    }
+
+    .chaos-2 {
+      background-color: #f8f9fa;
+      color: #2c3e50;
+    }
+
+    .chaos-3 {
+      background-color: #fff8e1;
+      color: #e65100;
+    }
+
+    .chaos-4 {
+      background-color: #fff3e0;
+      color: #bf360c;
+    }
+
+    .chaos-5 {
+      background-color: #fce4ec;
+      color: #880e4f;
+      font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
+    }
+
+    .chaos-6 {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      color: #4a148c;
+      font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
+    }
+
+    .chaos-7 {
+      background: repeating-linear-gradient(
+        45deg,
+        #ff6b6b,
+        #ff6b6b 10px,
+        #4ecdc4 10px,
+        #4ecdc4 20px
+      );
+      color: white;
+    }
+
+    .chaos-8 {
+      background: linear-gradient(45deg, #ff9a00, #ff0080, #00bfff, #00ff80);
+      background-size: 400% 400%;
+      animation: gradientShift 3s ease infinite;
+      color: white;
+    }
+
+    .chaos-9 {
+      background: #ff6b6b;
+      color: white;
+      animation: shake 0.5s infinite;
+      font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
+    }
+
+    .chaos-10 {
+      background: linear-gradient(0deg, #ff0080, #ff9a00, #00bfff, #00ff80);
+      background-size: 400% 400%;
+      animation: gradientShift 2s ease infinite, spin 4s linear infinite;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+
+    <!-- Audio Player -->
+    <audio id="background-music" loop>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+      <div class="content-wrapper">
+        <div class="header-controls">
+          <button id="music-toggle-welcome" class="music-toggle-button">🔇 Music Off</button>
+        </div>
+        <h1>🎂 Sister's Birthday Personality Quiz 🎉</h1>
+        <p class="intro-text">Answer 10 quick questions and discover what kind of chaotic genius you really are!</p>
+        <button onclick="startQuiz()" class="start-button">Start the Madness</button>
+      </div>
+    </div>
+
+    <!-- Question Screen -->
+    <div id="question-container" class="screen hidden">
+      <div class="content-wrapper">
+        <div class="header-controls">
+          <button id="music-toggle-question" class="music-toggle-button">🔇 Music Off</button>
+        </div>
+        <div id="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="question-counter" id="question-counter"></div>
+        <div id="question-text" class="question-text"></div>
+        <div id="answer-options" class="answer-options"></div>
+        <div id="sister-response" class="sister-response"></div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen hidden">
+      <div class="content-wrapper">
+        <div class="header-controls">
+          <button id="music-toggle-results" class="music-toggle-button">🔇 Music Off</button>
+        </div>
+        <h2 id="result-title" class="result-title"></h2>
+        <p id="result-description" class="result-description"></p>
+        <button onclick="restartQuiz()" class="restart-button">Try Again?</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const quizData = {
+      questions: [
+        {
+          id: 1,
+          text: "What's your ideal way to spend a Saturday morning?",
+          options: [
+            { text: "Sleeping in until noon", points: { A: 1 } },
+            { text: "Getting an early workout at the gym", points: { B: 1 } },
+            { text: "Binge-watching Netflix", points: { C: 1 } },
+            { text: "Planning next week's outfits", points: { D: 1 } }
+          ],
+          response: "Okay, totally normal so far...",
+          chaosLevel: 1
+        },
+        {
+          id: 2,
+          text: "Which emoji best describes your vibe?",
+          options: [
+            { text: "😴", points: { A: 1 } },
+            { text: "💪", points: { B: 1 } },
+            { text: "📺", points: { C: 1 } },
+            { text: "👗", points: { D: 1 } }
+          ],
+          response: "Still vibing...",
+          chaosLevel: 1
+        },
+        {
+          id: 3,
+          text: "What's your go-to snack?",
+          options: [
+            { text: "Cookies", points: { A: 1 } },
+            { text: "Protein bar", points: { B: 1 } },
+            { text: "Popcorn", points: { C: 1 } },
+            { text: "Avocado toast", points: { D: 1 } }
+          ],
+          response: "Hmm, interesting...",
+          chaosLevel: 2
+        },
+        {
+          id: 4,
+          text: "If you were a TV show character, who would it be?",
+          options: [
+            { text: "Chandler from Friends", points: { A: 1 } },
+            { text: "Monica from Friends", points: { B: 1 } },
+            { text: "Joey from Friends", points: { C: 1 } },
+            { text: "Rachel from Friends", points: { D: 1 } }
+          ],
+          response: "Sup bro? 😏",
+          chaosLevel: 3
+        },
+        {
+          id: 5,
+          text: "What's your favorite ice cream flavor?",
+          options: [
+            { text: "Vanilla", points: { A: 1 } },
+            { text: "Chocolate", points: { B: 1 } },
+            { text: "Strawberry Cheesecake", points: { C: 1 } },
+            { text: "Rainbow Sherbet", points: { D: 1 } }
+          ],
+          response: "Slay queen 👑",
+          chaosLevel: 4
+        },
+        {
+          id: 6,
+          text: "How do you handle stress?",
+          options: [
+            { text: "Ignore it", points: { A: 1 } },
+            { text: "Work out", points: { B: 1 } },
+            { text: "Talk to friends", points: { C: 1 } },
+            { text: "Buy new clothes", points: { D: 1 } }
+          ],
+          response: "Chill vibes only 🌈",
+          chaosLevel: 5
+        },
+        {
+          id: 7,
+          text: "Pick a song that matches your energy:",
+          options: [
+            { text: "Stayin' Alive - Bee Gees", points: { A: 1 } },
+            { text: "Eye of the Tiger - Survivor", points: { B: 1 } },
+            { text: "Don't Stop Me Now - Queen", points: { C: 1 } },
+            { text: "Vogue - Madonna", points: { D: 1 } }
+          ],
+          response: "You're living!",
+          chaosLevel: 6
+        },
+        {
+          id: 8,
+          text: "What's your spirit animal?",
+          options: [
+            { text: "Sloth", points: { A: 1 } },
+            { text: "Eagle", points: { B: 1 } },
+            { text: "Dolphin", points: { C: 1 } },
+            { text: "Peacock", points: { D: 1 } }
+          ],
+          response: "Wild card detected 🔥",
+          chaosLevel: 7
+        },
+        {
+          id: 9,
+          text: "Choose a quote that defines you:",
+          options: [
+            { text: "I'm not lazy, I'm on energy-saving mode.", points: { A: 1 } },
+            { text: "Hard work beats talent when talent doesn't work hard.", points: { B: 1 } },
+            { text: "Life is short, smile while you still have teeth.", points: { C: 1 } },
+            { text: "I woke up like this.", points: { D: 1 } }
+          ],
+          response: "This is peak chaos.",
+          chaosLevel: 9
+        },
+        {
+          id: 10,
+          text: "What would your ideal weekend look like?",
+          options: [
+            { text: "Netflix and chill", points: { A: 1 } },
+            { text: "Hiking with friends", points: { B: 1 } },
+            { text: "Partying all night", points: { C: 1 } },
+            { text: "Shopping spree", points: { D: 1 } }
+          ],
+          response: "MAXIMUM CHAOS MODE ACTIVATED 🚨",
+          chaosLevel: 10
+        }
+      ],
+      results: {
+        A: {
+          title: "The Chill Sloth 🦥",
+          description: "You're the king of low-key living. Nothing fazes you. You prefer comfort over chaos and know how to enjoy the simple pleasures of life. Your energy is calm, collected, and refreshingly honest."
+        },
+        B: {
+          title: "The Fitness Fanatic 💪",
+          description: "Discipline is your middle name. You're unstoppable when you set your mind to something. Whether it's hitting the gym or conquering life goals, you approach everything with determination and focus. You inspire others just by being you!"
+        },
+        C: {
+          title: "The Party Animal 🎉",
+          description: "You bring the fun wherever you go. Life of the party! Your energy is infectious, your laugh is contagious, and your ability to make any situation exciting is unmatched. You know how to live life to the fullest and aren't afraid to be yourself."
+        },
+        D: {
+          title: "The Fashionista 👗",
+          description: "Style is your language. You slay every outfit and know how to make an entrance. Your attention to detail and creative flair make you stand out in any crowd. You're not just following trends - you're setting them!"
+        }
+      }
+    };
+
+    let currentQuestionIndex = 0;
+    let scores = { A: 0, B: 0, C: 0, D: 0 };
+    let isMusicPlaying = false;
+    let audioElement = null;
+
+    // Initialize audio
+    document.addEventListener('DOMContentLoaded', function() {
+      audioElement = document.getElementById('background-music');
+      
+      // Set up music toggle buttons
+      const toggleButtons = document.querySelectorAll('.music-toggle-button');
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', toggleMusic);
+      });
+      
+      // Try to set up audio
+      try {
+        audioElement.volume = 0.3;
+      } catch (e) {
+        console.log('Audio setup error:', e);
+      }
+    });
+
+    function toggleMusic() {
+      if (!audioElement) return;
+      
+      if (isMusicPlaying) {
+        audioElement.pause();
+        isMusicPlaying = false;
+        updateMusicButtons(false);
+      } else {
+        audioElement.play()
+          .then(() => {
+            isMusicPlaying = true;
+            updateMusicButtons(true);
+          })
+          .catch(e => {
+            console.log('Playback failed:', e);
+            updateMusicButtons(false);
+          });
+      }
+    }
+
+    function updateMusicButtons(isPlaying) {
+      const buttons = document.querySelectorAll('.music-toggle-button');
+      buttons.forEach(button => {
+        if (isPlaying) {
+          button.textContent = '🔊 Music On';
+          button.classList.add('playing');
+        } else {
+          button.textContent = '🔇 Music Off';
+          button.classList.remove('playing');
+        }
+      });
+    }
+
+    function startQuiz() {
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('question-container').classList.remove('hidden');
+      showQuestion(currentQuestionIndex);
+    }
+
+    function showQuestion(index) {
+      const question = quizData.questions[index];
+      const container = document.getElementById('question-container');
+      const progressBar = document.querySelector('.progress-fill');
+      const questionCounter = document.getElementById('question-counter');
+      const questionText = document.getElementById('question-text');
+      const answerOptions = document.getElementById('answer-options');
+      const sisterResponse = document.getElementById('sister-response');
+
+      // Update chaos level
+      container.className = 'screen';
+      container.classList.add(`chaos-${question.chaosLevel}`);
+
+      // Progress bar
+      const percent = ((index + 1) / quizData.questions.length) * 100;
+      progressBar.style.width = `${percent}%`;
+
+      // Question counter
+      questionCounter.textContent = `Question ${index + 1} of ${quizData.questions.length}`;
+
+      // Question text
+      questionText.textContent = question.text;
+
+      // Answer options
+      answerOptions.innerHTML = '';
+      question.options.forEach((option, i) => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        button.onclick = () => selectAnswer(option.points);
+        answerOptions.appendChild(button);
+      });
+
+      // Sister's response
+      sisterResponse.textContent = question.response || '';
+    }
+
+    function selectAnswer(points) {
+      Object.keys(points).forEach(key => {
+        scores[key] += points[key];
+      });
+
+      if (currentQuestionIndex < quizData.questions.length - 1) {
+        currentQuestionIndex++;
+        showQuestion(currentQuestionIndex);
+      } else {
+        calculateResult();
+      }
+    }
+
+    function calculateResult() {
+      let maxKey = 'A';
+      let maxValue = scores[maxKey];
+
+      Object.keys(scores).forEach(key => {
+        if (scores[key] > maxValue) {
+          maxValue = scores[key];
+          maxKey = key;
+        }
+      });
+
+      showResults(maxKey);
+    }
+
+    function showResults(type) {
+      document.getElementById('question-container').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      const result = quizData.results[type];
+      document.getElementById('result-title').textContent = result.title;
+      document.getElementById('result-description').textContent = result.description;
+      
+      // Play victory sound effect
+      playVictorySound();
+    }
+
+    function playVictorySound() {
+      // Create a victory sound effect using Web Audio API
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+        oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+      } catch (e) {
+        console.log('Web Audio API not supported for victory sound');
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      scores = { A: 0, B: 0, C: 0, D: 0 };
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('welcome-screen').classList.remove('hidden');
+      // Reset music button state
+      updateMusicButtons(isMusicPlaying);
+    }
+  </script>
+</body>
+</html>
