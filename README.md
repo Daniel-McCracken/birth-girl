@@ -8,12 +8,7 @@ A fun, progressive personality quiz web app built with vanilla HTML/CSS/JS.
 - Progressive visual chaos based on question number
 - Responsive design for desktop & mobile
 - GitHub Pages ready
-
-## How to Deploy
-
-1. Push to GitHub
-2. Enable GitHub Pages in repo settings
-3. Visit your live site!
+- https://daniel-mccracken.github.io/birth-girl/
 
 ## License
 
